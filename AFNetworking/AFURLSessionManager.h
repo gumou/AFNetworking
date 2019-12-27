@@ -65,7 +65,7 @@
  ### `NSURLSessionDownloadDelegate`
 
  - `URLSession:downloadTask:didFinishDownloadingToURL:`
- - `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:`
+ - `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesWritten:totalBytesExpectedToWrite:`
  - `URLSession:downloadTask:didResumeAtOffset:expectedTotalBytes:`
 
  If any of these methods are overridden in a subclass, they _must_ call the `super` implementation first.
@@ -196,15 +196,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  @param cancelPendingTasks Whether or not to cancel pending tasks.
  */
-- (void)invalidateSessionCancelingTasks:(BOOL)cancelPendingTasks DEPRECATED_ATTRIBUTE;
-
-/**
- Invalidates the managed session, optionally canceling pending tasks and optionally resets given session.
- 
- @param cancelPendingTasks  Whether or not to cancel pending tasks.
- @param resetSession        Whether or not to reset the session of the manager.
- */
-- (void)invalidateSessionCancelingTasks:(BOOL)cancelPendingTasks resetSession:(BOOL)resetSession;
+- (void)invalidateSessionCancelingTasks:(BOOL)cancelPendingTasks;
 
 ///-------------------------
 /// @name Running Data Tasks
@@ -386,14 +378,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)setTaskDidCompleteBlock:(nullable void (^)(NSURLSession *session, NSURLSessionTask *task, NSError * _Nullable error))block;
 
-/**
- Sets a block to be executed when metrics are finalized related to a specific task, as handled by the `NSURLSessionTaskDelegate` method `URLSession:task:didFinishCollectingMetrics:`.
-
- @param block A block object to be executed when a session task is completed. The block has no return value, and takes three arguments: the session, the task, and any metrics that were collected in the process of executing the task.
- */
-#if AF_CAN_INCLUDE_SESSION_TASK_METRICS
-- (void)setTaskDidFinishCollectingMetricsBlock:(nullable void (^)(NSURLSession *session, NSURLSessionTask *task, NSURLSessionTaskMetrics * _Nullable metrics))block;
-#endif
 ///-------------------------------------------
 /// @name Setting Data Task Delegate Callbacks
 ///-------------------------------------------
@@ -445,7 +429,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDownloadTaskDidFinishDownloadingBlock:(nullable NSURL * _Nullable  (^)(NSURLSession *session, NSURLSessionDownloadTask *downloadTask, NSURL *location))block;
 
 /**
- Sets a block to be executed periodically to track download progress, as handled by the `NSURLSessionDownloadDelegate` method `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:`.
+ Sets a block to be executed periodically to track download progress, as handled by the `NSURLSessionDownloadDelegate` method `URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesWritten:totalBytesExpectedToWrite:`.
 
  @param block A block object to be called when an undetermined number of bytes have been downloaded from the server. This block has no return value and takes five arguments: the session, the download task, the number of bytes read since the last time the download progress block was called, the total bytes read, and the total bytes expected to be read during the request, as initially determined by the expected content size of the `NSHTTPURLResponse` object. This block may be called multiple times, and will execute on the session manager operation queue.
  */
@@ -513,10 +497,5 @@ FOUNDATION_EXPORT NSString * const AFNetworkingTaskDidCompleteAssetPathKey;
  Any error associated with the task, or the serialization of the response. Included in the userInfo dictionary of the `AFNetworkingTaskDidCompleteNotification` if an error exists.
  */
 FOUNDATION_EXPORT NSString * const AFNetworkingTaskDidCompleteErrorKey;
-
-/**
- The session task metrics taken from the download task. Included in the userInfo dictionary of the `AFNetworkingTaskDidCompleteSessionTaskMetrics`
- */
-FOUNDATION_EXPORT NSString * const AFNetworkingTaskDidCompleteSessionTaskMetrics;
 
 NS_ASSUME_NONNULL_END

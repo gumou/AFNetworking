@@ -75,6 +75,7 @@
                        success:(void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, UIImage *image))success
                        failure:(void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure
 {
+    
     if ([urlRequest URL] == nil) {
         self.image = placeholderImage;
         if (failure) {
@@ -84,7 +85,7 @@
         return;
     }
     
-    if ([self isActiveTaskURLEqualToURLRequest:urlRequest]) {
+    if ([self isActiveTaskURLEqualToURLRequest:urlRequest]){
         return;
     }
     
@@ -118,7 +119,7 @@
                        if ([strongSelf.af_activeImageDownloadReceipt.receiptID isEqual:downloadID]) {
                            if (success) {
                                success(request, response, responseObject);
-                           } else if (responseObject) {
+                           } else if(responseObject) {
                                strongSelf.image = responseObject;
                            }
                            [strongSelf clearActiveDownloadInformation];
